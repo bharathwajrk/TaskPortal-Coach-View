@@ -1,0 +1,27 @@
+Code
+//Get Users All Tasks claimed and assigned to his/her groups
+var p = new tw.object.TaskListProperties();
+p.userId = "2048."+tw.system.user_id;
+p.searchFilter = "Loan Workflow";//BPD Name
+p.interactionFilter = "ASSESS_AND_WORK_ON";
+
+
+var result = tw.system.retrieveTaskList(p);
+tw.local.test = [];
+for(var i=0; i<result.tasks.listLength; i++)
+    {
+    var searchResult = new tw.object.TaskListBO();
+    searchResult.subject = result.tasks[i].subject;
+    searchResult.instanceName = result.tasks[i].processInstanceName;
+    searchResult.instanceId = result.tasks[i].processInstanceId;
+    searchResult.dueDate = new TWDate();
+    searchResult.dueDate.setDate(result.tasks[i].dueDate.substring(8, 10));
+    searchResult.dueDate.setMonth(result.tasks[i].dueDate.substring(5, 7) - 1);
+    searchResult.dueDate.setFullYear(result.tasks[i].dueDate.substring(0, 4));
+    searchResult.dueDate.setHours(result.tasks[i].dueDate.substring(11, 13));
+    searchResult.dueDate.setMinutes(result.tasks[i].dueDate.substring(14, 16));
+    searchResult.dueDate.setSeconds(result.tasks[i].dueDate.substring(17, 19));
+    searchResult.dueDate.setMilliseconds(result.tasks[i].dueDate.substring(20, 23));
+    searchResult.taskId = result.tasks[i].id;
+    tw.local.test.insertIntoList(tw.local.test.listLength, searchResult);
+    }
