@@ -1,0 +1,43 @@
+Layout:
+Custom HTMl
+<table class="taskList" style=""></table>
+
+
+Behavior
+Load:
+
+var id = this.context.element.getAttribute("id");
+var table = this.context.element.querySelector(".taskList");
+var data = this.context.binding.get("value");
+var today = new Date();
+var row = "";
+var header = "<tr><th class=\"tableHeader width15\">Request Type</th> <th class=\"tableHeader width10\">Submitted</th> <th class=\"tableHeader width10\">FR</th> <th class=\"tableHeader width15\">Household</th>";
+header += "<th class=\"tableHeader width10\">Client</th> <th class=\"tableHeader width10\">TaskOwner</th> <th class=\"tableHeader width10\">Status</th> <th class=\"tableHeader width10\">Needed</th> <th class=\"tableHeader width10\">NO#</th></tr>";
+
+for(var i=0; i<data.items.length; i++)
+{
+var col1 = "<td class=\"taskRow width15\" counter=\""+i+"\">"+data.items[i].subject+"</td>";
+var col2 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].receivedDate+"</td>"
+var col3 = "<td class=\"taskRow width15\" counter=\""+i+"\">"+data.items[i].frName+"</td>";
+var col4 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].household+"</td>";
+var col5 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].client+"</td>";
+var col6 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].taskOwner+"</td>";
+var col7 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].status+"</td>";
+var col8 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].dueDate+"</td>";
+var col9 = "<td class=\"taskRow width10\" counter=\""+i+"\">"+data.items[i].no+"</td>";
+row += "<tr class=\"navigate\">"+col1+col2+col3+col4+col5+col6+col7+col8+col9+"</tr>";
+}
+
+table.innerHTML = "<tbody>"+header+row+"</tbody>";
+
+var _this = this;
+query("tr[class^=navigate]").forEach(function(event){
+on(event,"click",function(evt){
+    var j = domAttr.get(evt.target,"counter");
+    var newTaskId = data.items[j].taskId;
+    var instanceId = data.items[j].instanceId;
+    _this.context.options.selectedTaskId.set("value", newTaskId);
+    _this.context.options.selectedInstanceId.set("value", instanceId);
+    _this.context.trigger(function(){}, true);
+    });
+});
